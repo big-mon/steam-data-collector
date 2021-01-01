@@ -49,8 +49,11 @@ namespace SteamDataCollector
             // 除外リストを取得
             Task<List<string>> rejectList = GetRejectList();
 
+            // Appリストへ除外リストを適用
+            List<string> list = GetFormattedTargetList(await originList, await rejectList);
+
             // IDリストを返却
-            return await originList;
+            return list;
         }
 
         /// <summary>Steamから全Appリストを取得</summary>
@@ -92,6 +95,18 @@ namespace SteamDataCollector
             {
                 resList.Add(reader.GetUInt32(0).ToString());
             }
+
+            return resList;
+        }
+
+        /// <summary>全Appリストに除外リストを適用</summary>
+        /// <param name="origin">全Appリスト</param>
+        /// <param name="reject">除外リスト</param>
+        /// <returns>除外後リスト</returns>
+        private static List<string> GetFormattedTargetList(IReadOnlyList<string> origin, IReadOnlyList<string> reject)
+        {
+            HashSet<string> rejectIDs = new HashSet<string>(reject);
+            var resList = origin.Where(x => !rejectIDs.Contains(x)).ToList();
 
             return resList;
         }
