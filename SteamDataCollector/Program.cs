@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace SteamDataCollector
         private static async Task Main(string[] args)
         {
             // 全Appのリストを取得
-            List<int> list = await GetAppList();
+            List<string> list = await GetAppList();
 
             // DBを更新
             await UpdateData(list);
@@ -38,18 +39,18 @@ namespace SteamDataCollector
 
         #region アプリ取得
 
-        /// <summary>
-        /// AppIDのリストを取得
-        /// </summary>
+        /// <summary>AppIDのリストを取得</summary>
         /// <returns>AppIDリスト</returns>
-        private static async Task<List<int>> GetAppList()
+        private static async Task<List<string>> GetAppList()
         {
             // Appリストを取得
-            var res = GetAllApps();
-            var appList = System.Text.Json.JsonSerializer.Deserialize<Root>(await res);
+            var appList = JsonSerializer.Deserialize<Root>(await GetAllApps());
+            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderBy(x => x).ToList() : new List<string>();
+
+            // 除外リストを取得
 
             // IDリストを返却
-            return null != appList ? appList.Applist.Apps.Select(x => x.Appid).OrderBy(x => x).ToList() : new List<int>();
+            return resList;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace SteamDataCollector
 
         /// <summary>APIをコールしDBへ反映</summary>
         /// <param name="ids">AppIDリスト</param>
-        private static async Task UpdateData(IReadOnlyList<int> ids)
+        private static async Task UpdateData(IReadOnlyList<string> ids)
         {
             var stopwatch = new Stopwatch();
             var client = new HttpClient();
@@ -83,11 +84,11 @@ namespace SteamDataCollector
                     stopwatch.Restart();
 
                     // APIから結果取得
-                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", id.ToString(), cc.ToString()));
+                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", id, cc.ToString()));
 
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken(id.ToString());
-                    var sa = new SteamApp(id.ToString(), res);
+                    var sa = new SteamApp(id, res);
 
                     // DB反映
                     await UpdateDatabase(sa, (CC)cc);
