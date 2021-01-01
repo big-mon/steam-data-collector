@@ -80,7 +80,7 @@ namespace SteamDataCollector
                     stopwatch.Restart();
 
                     // APIから結果取得
-                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=jp&appids={0}&cc={1}", 728530, cc.ToString()));
+                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", 728530, cc.ToString()));
 
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken("728530");
