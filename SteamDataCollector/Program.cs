@@ -73,9 +73,27 @@ namespace SteamDataCollector
             return resList;
         }
 
+        /// <summary>除外対象リストを取得</summary>
+        /// <returns>除外対象リスト</returns>
         private static async Task<List<string>> GetRejectList()
         {
+            var resList = new List<string>();
 
+            using var conn = new MySqlConnection(ConnString);
+            await conn.OpenAsync();
+
+            using var cmd = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "SELECT `appid` FROM apps WHERE `type` NOT IN ('game', 'dlc')"
+            };
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                resList.Add(reader.GetString(0));
+            }
+
+            return resList;
         }
 
         #endregion アプリ取得
