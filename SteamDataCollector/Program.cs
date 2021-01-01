@@ -146,7 +146,7 @@ namespace SteamDataCollector
                     isSkip = !sa.IsSuccess;
 
                     var title = null == sa.App ? "" : sa.App.Name;
-                    Console.WriteLine($"{count, 7}/{ids.Count}-{cc} : {sa.AppId, 7} {title}");
+                    Console.WriteLine($"{count,7}/{ids.Count}-{cc} : {sa.AppId,7} {title}");
 
                     // DB反映
                     await UpdateDatabase(sa, (CC)cc);

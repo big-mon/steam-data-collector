@@ -100,14 +100,14 @@ namespace SteamDataCollector.Models
                 .Select(x => new Developer(x.ToString()))
                 .ToList();
             }
-            
+
             if (null != json["publishers"])
             {
                 Publishers = json["publishers"]
                 .Select(x => new Publisher(x.ToString()))
                 .ToList();
             }
-            
+
             if (!IsFree) PriceOverview = new Price(json["price_overview"]);
 
             if (null != json["genres"])
@@ -116,7 +116,7 @@ namespace SteamDataCollector.Models
                 .Select(x => new Genre(x))
                 .ToList();
             }
-            
+
             Recommendations = null != json["recommendations"]
                 && uint.TryParse(json["recommendations"]["total"].ToString(), out uint i) ? i : 0;
 
