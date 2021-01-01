@@ -91,6 +91,7 @@ namespace SteamDataCollector.Models
                 Languages = new Regex("<.*?</.*?>", RegexOptions.Singleline)
                 .Replace(json["supported_languages"].ToString().Replace("languages with full audio support", ""), "")
                 .Split(",")
+                .Select(x => x.Trim())
                 .ToList();
             }
 
