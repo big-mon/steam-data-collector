@@ -90,7 +90,7 @@ namespace SteamDataCollector
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                resList.Add(reader.GetString(0));
+                resList.Add(reader.GetUInt32(0).ToString());
             }
 
             return resList;
