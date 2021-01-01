@@ -97,6 +97,15 @@ namespace SteamDataCollector.Properties {
         }
         
         /// <summary>
+        ///   670 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SleepMilSec {
+            get {
+                return ResourceManager.GetString("SleepMilSec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   YOUR_ID に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UserID {

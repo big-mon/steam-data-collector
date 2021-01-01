@@ -129,6 +129,10 @@
   <data name="Server" xml:space="preserve">
     <value>localhost</value>
   </data>
+  <data name="SleepMilSec" xml:space="preserve">
+    <value>670</value>
+    <comment>200 requests per 5 minutes</comment>
+  </data>
   <data name="UserID" xml:space="preserve">
     <value>YOUR_ID</value>
   </data>
