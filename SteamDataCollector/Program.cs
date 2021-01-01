@@ -63,7 +63,7 @@ namespace SteamDataCollector
 
         #endregion アプリ取得
 
-        #region DB更新
+        #region App毎更新
 
         /// <summary>APIをコールしDBへ反映</summary>
         /// <param name="ids">AppIDリスト</param>
@@ -96,6 +96,8 @@ namespace SteamDataCollector
             }
         }
 
+        #region DB更新
+
         /// <summary>DB更新</summary>
         /// <param name="app">App情報</param>
         private static async Task UpdateDatabase(SteamApp app)
@@ -107,29 +109,49 @@ namespace SteamDataCollector
                 await conn.OpenAsync();
 
                 // apps
-                using (var cmd = new MySqlCommand())
-                {
-                    cmd.Connection = conn;
-                    cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP";
-                    cmd.Parameters.AddWithValue("appid", app.App.AppId);
-                    cmd.Parameters.AddWithValue("name", app.App.Name);
-                    cmd.Parameters.AddWithValue("type", app.App.Type);
-                    cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
-                    cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
-                    await cmd.ExecuteNonQueryAsync();
-                }
+                await UpdateApp(conn, app);
 
                 // developers
-                using (var cmd = new MySqlCommand())
-                {
-                    cmd.Connection = conn;
-                    cmd.CommandText = "INSERT INTO developers (`appid`, `name`, ) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP";
-                    cmd.Parameters.AddWithValue("appid", app.App.AppId);
-                    cmd.Parameters.AddWithValue("name", app.App.Name);
-                    _ = cmd.ExecuteNonQueryAsync();
-                }
+                await Updatedevelopers(conn, app);
             }
         }
+
+        /// <summary>Appテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdateApp(MySqlConnection conn, SteamApp app)
+        {
+            using var cmd = new MySqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP";
+            cmd.Parameters.AddWithValue("appid", app.App.AppId);
+            cmd.Parameters.AddWithValue("name", app.App.Name);
+            cmd.Parameters.AddWithValue("type", app.App.Type);
+            cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
+            cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>developersテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task Updatedevelopers(MySqlConnection conn, SteamApp app)
+        {
+            using var cmd = new MySqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "DELETE FROM developers WHERE `appid` = @appid";
+            cmd.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd.ExecuteNonQueryAsync();
+
+            foreach (var item in app.App.Developers)
+            {
+                cmd.CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP";
+                cmd.Parameters.AddWithValue("name", item.Name);
+                _ = cmd.ExecuteNonQueryAsync();
+            }
+        }
+
+        #endregion DB更新
 
         /// <summary>指定時間を強制的に経過させる</summary>
         /// <param name="elapsed">これまでの経過時間ミリ秒</param>
@@ -139,6 +161,6 @@ namespace SteamDataCollector
             if (gap > 0) Thread.Sleep(gap);
         }
 
-        #endregion DB更新
+        #endregion App毎更新
     }
 }
