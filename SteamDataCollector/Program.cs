@@ -87,7 +87,7 @@ namespace SteamDataCollector
                     var sa = new SteamApp(id.ToString(), res);
 
                     // DB反映
-                    await UpdateDatabase(sa);
+                    await UpdateDatabase(sa, (CC)cc);
 
                     // APIリミット回避のため待機
                     stopwatch.Stop();
@@ -100,7 +100,7 @@ namespace SteamDataCollector
 
         /// <summary>DB更新</summary>
         /// <param name="app">App情報</param>
-        private static async Task UpdateDatabase(SteamApp app)
+        private static async Task UpdateDatabase(SteamApp app, CC cc)
         {
             var connString = $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
 
@@ -111,14 +111,17 @@ namespace SteamDataCollector
                 // apps
                 await UpdateApp(conn, app);
 
-                // developers
-                await UpdateDevelopers(conn, app);
+                if (CC.us == cc)
+                {
+                    // developers
+                    await UpdateDevelopers(conn, app);
 
-                // publishers
-                await UpdatePublishers(conn, app);
+                    // publishers
+                    await UpdatePublishers(conn, app);
 
-                // genres
-                await UpdateGenres(conn, app);
+                    // genres
+                    await UpdateGenres(conn, app);
+                }
             }
         }
 
