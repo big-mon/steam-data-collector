@@ -147,10 +147,22 @@ namespace SteamDataCollector
                     CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP"
                 };
                 cmd.Parameters.AddWithValue("appid", app.App.AppId);
-                cmd.Parameters.AddWithValue("name", app.App.Name);
-                cmd.Parameters.AddWithValue("type", app.App.Type);
-                cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
-                cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
+
+                if (app.IsSuccess)
+                {
+                    cmd.Parameters.AddWithValue("name", app.App.Name);
+                    cmd.Parameters.AddWithValue("type", app.App.Type);
+                    cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
+                    cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("name", "");
+                    cmd.Parameters.AddWithValue("type", "");
+                    cmd.Parameters.AddWithValue("recommendations", 0);
+                    cmd.Parameters.AddWithValue("is_free", false);
+                }
+
                 await cmd.ExecuteNonQueryAsync();
             }
         }
