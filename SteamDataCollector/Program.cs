@@ -178,7 +178,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP"
                 };
-                cmd.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd.Parameters.AddWithValue("appid", app.AppId);
 
                 if (app.IsSuccess)
                 {
@@ -213,7 +213,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM developers WHERE `appid` = @appid"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
                 // 挿入
@@ -224,7 +224,7 @@ namespace SteamDataCollector
                         Connection = conn,
                         CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name)"
                     };
-                    cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                    cmd2.Parameters.AddWithValue("appid", app.AppId);
                     cmd2.Parameters.AddWithValue("name", item.Name);
                     _ = cmd2.ExecuteNonQueryAsync();
                 }
@@ -245,7 +245,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM publishers WHERE `appid` = @appid"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
                 // 挿入
@@ -256,7 +256,7 @@ namespace SteamDataCollector
                         Connection = conn,
                         CommandText = "INSERT INTO publishers (`appid`, `name`) VALUES (@appid, @name)"
                     };
-                    cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                    cmd2.Parameters.AddWithValue("appid", app.AppId);
                     cmd2.Parameters.AddWithValue("name", item.Name);
                     _ = cmd2.ExecuteNonQueryAsync();
                 }
@@ -277,7 +277,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM genres WHERE `appid` = @appid"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
                 // 挿入
@@ -288,7 +288,7 @@ namespace SteamDataCollector
                         Connection = conn,
                         CommandText = "INSERT INTO genres (`appid`, `name`, `id`) VALUES (@appid, @name, @id)"
                     };
-                    cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                    cmd2.Parameters.AddWithValue("appid", app.AppId);
                     cmd2.Parameters.AddWithValue("name", item.Name);
                     cmd2.Parameters.AddWithValue("id", item.Id);
                     _ = cmd2.ExecuteNonQueryAsync();
@@ -310,7 +310,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM languages WHERE `appid` = @appid"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
                 // 挿入
@@ -321,7 +321,7 @@ namespace SteamDataCollector
                         Connection = conn,
                         CommandText = "INSERT INTO languages (`appid`, `name`) VALUES (@appid, @name)"
                     };
-                    cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                    cmd2.Parameters.AddWithValue("appid", app.AppId);
                     cmd2.Parameters.AddWithValue("name", item);
                     _ = cmd2.ExecuteNonQueryAsync();
                 }
@@ -342,7 +342,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM prices WHERE `appid` = @appid and `currency` = @currency"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 cmd1.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
                 await cmd1.ExecuteNonQueryAsync();
 
@@ -352,7 +352,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "INSERT INTO prices (`appid`, `currency`, `initial`, `final`, `discount_percent`) VALUES (@appid, @currency, @initial, @final, @discount_percent)"
                 };
-                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("appid", app.AppId);
                 cmd2.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
                 cmd2.Parameters.AddWithValue("initial", app.App.PriceOverview.Initial);
                 cmd2.Parameters.AddWithValue("final", app.App.PriceOverview.Final);
@@ -375,7 +375,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "DELETE FROM releases WHERE `appid` = @appid"
                 };
-                cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
                 // 挿入
@@ -384,7 +384,7 @@ namespace SteamDataCollector
                     Connection = conn,
                     CommandText = "INSERT INTO releases (`appid`, `comming_soon`, `date`) VALUES (@appid, @comming_soon, @date)"
                 };
-                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("appid", app.AppId);
                 cmd2.Parameters.AddWithValue("comming_soon", app.App.Release.IsUnRelease);
                 cmd2.Parameters.AddWithValue("date", app.App.Release.Date);
                 _ = cmd2.ExecuteNonQueryAsync();
