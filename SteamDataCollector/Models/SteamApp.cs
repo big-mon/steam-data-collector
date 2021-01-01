@@ -85,21 +85,41 @@ namespace SteamDataCollector.Models
             Type = json["type"].ToString();
             Name = json["name"].ToString();
             IsFree = (bool)json["is_free"];
-            Languages = new Regex("<.*?</.*?>", RegexOptions.Singleline)
+
+            if (null != json["supported_languages"])
+            {
+                Languages = new Regex("<.*?</.*?>", RegexOptions.Singleline)
                 .Replace(json["supported_languages"].ToString().Replace("languages with full audio support", ""), "")
                 .Split(",")
                 .ToList();
-            Developers = json["developers"]
+            }
+
+            if (null != json["developers"])
+            {
+                Developers = json["developers"]
                 .Select(x => new Developer(x.ToString()))
                 .ToList();
-            Publishers = json["publishers"]
+            }
+            
+            if (null != json["publishers"])
+            {
+                Publishers = json["publishers"]
                 .Select(x => new Publisher(x.ToString()))
                 .ToList();
+            }
+            
             if (!IsFree) PriceOverview = new Price(json["price_overview"]);
-            Genres = json["genres"]
+
+            if (null != json["genres"])
+            {
+                Genres = json["genres"]
                 .Select(x => new Genre(x))
                 .ToList();
-            Recommendations = uint.Parse(json["recommendations"]["total"].ToString());
+            }
+            
+            Recommendations = null != json["recommendations"]
+                && uint.TryParse(json["recommendations"]["total"].ToString(), out uint i) ? i : 0;
+
             Release = new Release(json["release_date"]);
         }
     }

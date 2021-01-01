@@ -243,6 +243,9 @@ namespace SteamDataCollector
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
+                // 終了判定
+                if (null == app.App || null == app.App.Developers) return;
+
                 // 挿入
                 foreach (var item in app.App.Developers)
                 {
@@ -275,6 +278,9 @@ namespace SteamDataCollector
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
+                // 終了判定
+                if (null == app.App || null == app.App.Publishers) return;
+
                 // 挿入
                 foreach (var item in app.App.Publishers)
                 {
@@ -306,6 +312,9 @@ namespace SteamDataCollector
                 };
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
+
+                // 終了判定
+                if (null == app.App || null == app.App.Genres) return;
 
                 // 挿入
                 foreach (var item in app.App.Genres)
@@ -340,6 +349,9 @@ namespace SteamDataCollector
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
 
+                // 終了判定
+                if (null == app.App || null == app.App.Languages) return;
+
                 // 挿入
                 foreach (var item in app.App.Languages)
                 {
@@ -373,6 +385,9 @@ namespace SteamDataCollector
                 cmd1.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
                 await cmd1.ExecuteNonQueryAsync();
 
+                // 終了判定
+                if (null == app.App || null == app.App.PriceOverview) return;
+
                 // 挿入
                 using var cmd2 = new MySqlCommand
                 {
@@ -404,6 +419,9 @@ namespace SteamDataCollector
                 };
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
                 await cmd1.ExecuteNonQueryAsync();
+
+                // 終了判定
+                if (null == app.App || null == app.App.Release) return;
 
                 // 挿入
                 using var cmd2 = new MySqlCommand
