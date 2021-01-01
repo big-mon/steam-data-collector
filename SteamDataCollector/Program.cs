@@ -44,18 +44,15 @@ namespace SteamDataCollector
         private static async Task<List<string>> GetAppList()
         {
             // Appリストを取得
-            var appList = JsonSerializer.Deserialize<Root>(await GetAllApps());
-            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderBy(x => x).ToList() : new List<string>();
+            Task<List<string>> originList = ConvertAppList();
 
             // 除外リストを取得
 
             // IDリストを返却
-            return resList;
+            return await originList;
         }
 
-        /// <summary>
-        /// Steamから全Appリストを取得
-        /// </summary>
+        /// <summary>Steamから全Appリストを取得</summary>
         /// <returns>API返却値</returns>
         private static async Task<string> GetAllApps()
         {
@@ -63,6 +60,16 @@ namespace SteamDataCollector
             var result = await client.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json");
 
             return result;
+        }
+
+        /// <summary>API返却値をリストに変換</summary>
+        /// <returns>AppIDリスト</returns>
+        private static async Task<List<string>> ConvertAppList()
+        {
+            var appList = JsonSerializer.Deserialize<Root>(await GetAllApps());
+            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderBy(x => int.Parse(x)).ToList() : new List<string>();
+
+            return resList;
         }
 
         #endregion アプリ取得
