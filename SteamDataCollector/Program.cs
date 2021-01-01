@@ -375,6 +375,9 @@ namespace SteamDataCollector
             {
                 await conn.OpenAsync();
 
+                // 終了判定
+                if (null == app.App || null == app.App.PriceOverview) return;
+
                 // クリーニング
                 using var cmd1 = new MySqlCommand
                 {
@@ -382,11 +385,8 @@ namespace SteamDataCollector
                     CommandText = "DELETE FROM prices WHERE `appid` = @appid and `currency` = @currency"
                 };
                 cmd1.Parameters.AddWithValue("appid", app.AppId);
-                cmd1.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
+                cmd1.Parameters.AddWithValue("currency", null == app.App.PriceOverview.Currency);
                 await cmd1.ExecuteNonQueryAsync();
-
-                // 終了判定
-                if (null == app.App || null == app.App.PriceOverview) return;
 
                 // 挿入
                 using var cmd2 = new MySqlCommand
