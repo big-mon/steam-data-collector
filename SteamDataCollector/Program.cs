@@ -112,7 +112,13 @@ namespace SteamDataCollector
                 await UpdateApp(conn, app);
 
                 // developers
-                await Updatedevelopers(conn, app);
+                await UpdateDevelopers(conn, app);
+
+                // publishers
+                await UpdatePublishers(conn, app);
+
+                // genres
+                await UpdateGenres(conn, app);
             }
         }
 
@@ -121,9 +127,11 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateApp(MySqlConnection conn, SteamApp app)
         {
-            using var cmd = new MySqlCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP";
+            using var cmd = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "INSERT INTO apps (`appid`, `name`, `type`, `recommendations`, `is_free`) VALUES (@appid, @name, @type, @recommendations, @is_free) ON DUPLICATE KEY UPDATE `name` = @name, `type` = @type, `recommendations` = @recommendations, `is_free` = @is_free, `update_time` = CURRENT_TIMESTAMP"
+            };
             cmd.Parameters.AddWithValue("appid", app.App.AppId);
             cmd.Parameters.AddWithValue("name", app.App.Name);
             cmd.Parameters.AddWithValue("type", app.App.Type);
@@ -135,19 +143,79 @@ namespace SteamDataCollector
         /// <summary>developersテーブルを更新</summary>
         /// <param name="conn">接続</param>
         /// <param name="app">App情報</param>
-        private static async Task Updatedevelopers(MySqlConnection conn, SteamApp app)
+        private static async Task UpdateDevelopers(MySqlConnection conn, SteamApp app)
         {
-            using var cmd = new MySqlCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "DELETE FROM developers WHERE `appid` = @appid";
-            cmd.Parameters.AddWithValue("appid", app.App.AppId);
-            await cmd.ExecuteNonQueryAsync();
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM developers WHERE `appid` = @appid"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd1.ExecuteNonQueryAsync();
 
             foreach (var item in app.App.Developers)
             {
-                cmd.CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP";
-                cmd.Parameters.AddWithValue("name", item.Name);
-                _ = cmd.ExecuteNonQueryAsync();
+                using var cmd2 = new MySqlCommand
+                {
+                    Connection = conn,
+                    CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP"
+                };
+                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("name", item.Name);
+                _ = cmd2.ExecuteNonQueryAsync();
+            }
+        }
+
+        /// <summary>publishersテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdatePublishers(MySqlConnection conn, SteamApp app)
+        {
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM publishers WHERE `appid` = @appid"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd1.ExecuteNonQueryAsync();
+
+            foreach (var item in app.App.Publishers)
+            {
+                using var cmd2 = new MySqlCommand
+                {
+                    Connection = conn,
+                    CommandText = "INSERT INTO publishers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP"
+                };
+                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("name", item.Name);
+                _ = cmd2.ExecuteNonQueryAsync();
+            }
+        }
+
+        /// <summary>genresテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdateGenres(MySqlConnection conn, SteamApp app)
+        {
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM genres WHERE `appid` = @appid"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd1.ExecuteNonQueryAsync();
+
+            foreach (var item in app.App.Genres)
+            {
+                using var cmd2 = new MySqlCommand
+                {
+                    Connection = conn,
+                    CommandText = "INSERT INTO genres (`appid`, `name`, `id`) VALUES (@appid, @name, @id) ON DUPLICATE KEY UPDATE `name` = @name, `id` = @id, `update_time` = CURRENT_TIMESTAMP"
+                };
+                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("name", item.Name);
+                cmd2.Parameters.AddWithValue("id", item.Id);
+                _ = cmd2.ExecuteNonQueryAsync();
             }
         }
 
