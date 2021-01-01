@@ -111,26 +111,29 @@ namespace SteamDataCollector
                 // apps
                 await UpdateApp(conn, app);
 
-                if (CC.us == cc)
+                if (app.IsSuccess)
                 {
-                    // developers
-                    await UpdateDevelopers(conn, app);
+                    // prices
+                    await UpdatePrices(conn, app);
 
-                    // publishers
-                    await UpdatePublishers(conn, app);
+                    if (CC.us == cc)
+                    {
+                        // developers
+                        await UpdateDevelopers(conn, app);
 
-                    // genres
-                    await UpdateGenres(conn, app);
+                        // publishers
+                        await UpdatePublishers(conn, app);
 
-                    // languages
-                    await UpdateLanguages(conn, app);
+                        // genres
+                        await UpdateGenres(conn, app);
 
-                    // releases
-                    await UpdateReleases(conn, app);
+                        // languages
+                        await UpdateLanguages(conn, app);
+
+                        // releases
+                        await UpdateReleases(conn, app);
+                    }
                 }
-
-                // prices
-                await UpdatePrices(conn, app);
             }
         }
 
