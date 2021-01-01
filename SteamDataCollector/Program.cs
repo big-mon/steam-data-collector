@@ -1,23 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Collections.Generic;
-using System.Text.Json;
-using SteamDataCollector.Models;
-using System.Linq;
-using System.Threading;
+﻿using MySqlConnector;
 using Newtonsoft.Json.Linq;
+using SteamDataCollector.Models;
 using SteamDataCollector.Models.AppList;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using MySqlConnector;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SteamDataCollector
 {
@@ -28,6 +19,7 @@ namespace SteamDataCollector
         {
             /// <summary>アメリカ</summary>
             us,
+
             /// <summary>日本</summary>
             jp
         }
@@ -69,7 +61,7 @@ namespace SteamDataCollector
             return result;
         }
 
-        #endregion
+        #endregion アプリ取得
 
         #region DB更新
 
@@ -147,6 +139,6 @@ namespace SteamDataCollector
             if (gap > 0) Thread.Sleep(gap);
         }
 
-        #endregion
+        #endregion DB更新
     }
 }
