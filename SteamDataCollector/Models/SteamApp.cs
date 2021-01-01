@@ -94,7 +94,7 @@ namespace SteamDataCollector.Models
             Publishers = json["publishers"]
                 .Select(x => new Publisher(x.ToString()))
                 .ToList();
-            PriceOverview = new Price(json["price_overview"]);
+            if (!IsFree) PriceOverview = new Price(json["price_overview"]);
             Genres = json["genres"]
                 .Select(x => new Genre(x))
                 .ToList();
