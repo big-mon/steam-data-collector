@@ -83,10 +83,10 @@ namespace SteamDataCollector
                     stopwatch.Restart();
 
                     // APIから結果取得
-                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", 728530, cc.ToString()));
+                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", id.ToString(), cc.ToString()));
 
                     // オブジェクト変換
-                    var res = JObject.Parse(result).SelectToken("728530");
+                    var res = JObject.Parse(result).SelectToken(id.ToString());
                     var sa = new SteamApp(id.ToString(), res);
 
                     // DB反映
