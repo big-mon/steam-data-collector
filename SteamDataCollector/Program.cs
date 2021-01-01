@@ -121,7 +121,13 @@ namespace SteamDataCollector
 
                     // genres
                     await UpdateGenres(conn, app);
+
+                    // languages
+                    await UpdateLanguages(conn, app);
                 }
+
+                // prices
+                await UpdatePrices(conn, app);
             }
         }
 
@@ -163,7 +169,7 @@ namespace SteamDataCollector
                 using var cmd2 = new MySqlCommand
                 {
                     Connection = conn,
-                    CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP"
+                    CommandText = "INSERT INTO developers (`appid`, `name`) VALUES (@appid, @name)"
                 };
                 cmd2.Parameters.AddWithValue("appid", app.App.AppId);
                 cmd2.Parameters.AddWithValue("name", item.Name);
@@ -191,7 +197,7 @@ namespace SteamDataCollector
                 using var cmd2 = new MySqlCommand
                 {
                     Connection = conn,
-                    CommandText = "INSERT INTO publishers (`appid`, `name`) VALUES (@appid, @name) ON DUPLICATE KEY UPDATE `name` = @name, `update_time` = CURRENT_TIMESTAMP"
+                    CommandText = "INSERT INTO publishers (`appid`, `name`) VALUES (@appid, @name)"
                 };
                 cmd2.Parameters.AddWithValue("appid", app.App.AppId);
                 cmd2.Parameters.AddWithValue("name", item.Name);
@@ -219,13 +225,70 @@ namespace SteamDataCollector
                 using var cmd2 = new MySqlCommand
                 {
                     Connection = conn,
-                    CommandText = "INSERT INTO genres (`appid`, `name`, `id`) VALUES (@appid, @name, @id) ON DUPLICATE KEY UPDATE `name` = @name, `id` = @id, `update_time` = CURRENT_TIMESTAMP"
+                    CommandText = "INSERT INTO genres (`appid`, `name`, `id`) VALUES (@appid, @name, @id)"
                 };
                 cmd2.Parameters.AddWithValue("appid", app.App.AppId);
                 cmd2.Parameters.AddWithValue("name", item.Name);
                 cmd2.Parameters.AddWithValue("id", item.Id);
                 _ = cmd2.ExecuteNonQueryAsync();
             }
+        }
+
+        /// <summary>languagesテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdateLanguages(MySqlConnection conn, SteamApp app)
+        {
+            // クリーニング
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM languages WHERE `appid` = @appid"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd1.ExecuteNonQueryAsync();
+
+            // 挿入
+            foreach (var item in app.App.Languages)
+            {
+                using var cmd2 = new MySqlCommand
+                {
+                    Connection = conn,
+                    CommandText = "INSERT INTO languages (`appid`, `name`) VALUES (@appid, @name)"
+                };
+                cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+                cmd2.Parameters.AddWithValue("name", item);
+                _ = cmd2.ExecuteNonQueryAsync();
+            }
+        }
+
+        /// <summary>pricesテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdatePrices(MySqlConnection conn, SteamApp app)
+        {
+            // クリーニング
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM prices WHERE `appid` = @appid and `currency` = @currency"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            cmd1.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
+            await cmd1.ExecuteNonQueryAsync();
+
+            // 挿入
+            using var cmd2 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "INSERT INTO prices (`appid`, `currency`, `initial`, `final`, `discount_percent`) VALUES (@appid, @currency, @initial, @final, @discount_percent)"
+            };
+            cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+            cmd2.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
+            cmd2.Parameters.AddWithValue("initial", app.App.PriceOverview.Initial);
+            cmd2.Parameters.AddWithValue("final", app.App.PriceOverview.Final);
+            cmd2.Parameters.AddWithValue("discount_percent", app.App.PriceOverview.DiscountPercent);
+            _ = cmd2.ExecuteNonQueryAsync();
         }
 
         #endregion DB更新
