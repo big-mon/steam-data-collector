@@ -124,6 +124,9 @@ namespace SteamDataCollector
 
                     // languages
                     await UpdateLanguages(conn, app);
+
+                    // releases
+                    await UpdateReleases(conn, app);
                 }
 
                 // prices
@@ -288,6 +291,32 @@ namespace SteamDataCollector
             cmd2.Parameters.AddWithValue("initial", app.App.PriceOverview.Initial);
             cmd2.Parameters.AddWithValue("final", app.App.PriceOverview.Final);
             cmd2.Parameters.AddWithValue("discount_percent", app.App.PriceOverview.DiscountPercent);
+            _ = cmd2.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>releasesテーブルを更新</summary>
+        /// <param name="conn">接続</param>
+        /// <param name="app">App情報</param>
+        private static async Task UpdateReleases(MySqlConnection conn, SteamApp app)
+        {
+            // クリーニング
+            using var cmd1 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "DELETE FROM releases WHERE `appid` = @appid"
+            };
+            cmd1.Parameters.AddWithValue("appid", app.App.AppId);
+            await cmd1.ExecuteNonQueryAsync();
+
+            // 挿入
+            using var cmd2 = new MySqlCommand
+            {
+                Connection = conn,
+                CommandText = "INSERT INTO releases (`appid`, `comming_soon`, `date`) VALUES (@appid, @comming_soon, @date)"
+            };
+            cmd2.Parameters.AddWithValue("appid", app.App.AppId);
+            cmd2.Parameters.AddWithValue("comming_soon", app.App.Release.IsUnRelease);
+            cmd2.Parameters.AddWithValue("date", app.App.Release.Date);
             _ = cmd2.ExecuteNonQueryAsync();
         }
 
