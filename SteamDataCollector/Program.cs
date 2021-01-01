@@ -148,6 +148,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateDevelopers(MySqlConnection conn, SteamApp app)
         {
+            // クリーニング
             using var cmd1 = new MySqlCommand
             {
                 Connection = conn,
@@ -156,6 +157,7 @@ namespace SteamDataCollector
             cmd1.Parameters.AddWithValue("appid", app.App.AppId);
             await cmd1.ExecuteNonQueryAsync();
 
+            // 挿入
             foreach (var item in app.App.Developers)
             {
                 using var cmd2 = new MySqlCommand
@@ -174,6 +176,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdatePublishers(MySqlConnection conn, SteamApp app)
         {
+            // クリーニング
             using var cmd1 = new MySqlCommand
             {
                 Connection = conn,
@@ -182,6 +185,7 @@ namespace SteamDataCollector
             cmd1.Parameters.AddWithValue("appid", app.App.AppId);
             await cmd1.ExecuteNonQueryAsync();
 
+            // 挿入
             foreach (var item in app.App.Publishers)
             {
                 using var cmd2 = new MySqlCommand
@@ -200,6 +204,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateGenres(MySqlConnection conn, SteamApp app)
         {
+            // クリーニング
             using var cmd1 = new MySqlCommand
             {
                 Connection = conn,
@@ -208,6 +213,7 @@ namespace SteamDataCollector
             cmd1.Parameters.AddWithValue("appid", app.App.AppId);
             await cmd1.ExecuteNonQueryAsync();
 
+            // 挿入
             foreach (var item in app.App.Genres)
             {
                 using var cmd2 = new MySqlCommand
