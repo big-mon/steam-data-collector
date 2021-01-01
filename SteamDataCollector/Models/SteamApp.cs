@@ -29,6 +29,8 @@ namespace SteamDataCollector.Models
         /// <param name="json">JSON</param>
         internal SteamApp(string id, JToken json)
         {
+            if (null == json) return;
+
             AppId = id;
             IsSuccess = (bool)json["success"];
             if (IsSuccess) App = new App(id, json["data"]);
@@ -80,6 +82,8 @@ namespace SteamDataCollector.Models
         /// <param name="json">JSON</param>
         internal App(string id, JToken json)
         {
+            if (null == json) return;
+
             AppId = id;
             Type = json["type"].ToString();
             Name = json["name"].ToString();
@@ -154,6 +158,8 @@ namespace SteamDataCollector.Models
         /// <param name="json">JSON</param>
         internal Price(JToken json)
         {
+            if (null == json) return;
+
             Currency = json["currency"].ToString();
             Initial = decimal.Parse(json["initial"].ToString()) / 100;
             Final = decimal.Parse(json["final"].ToString()) / 100;
@@ -174,6 +180,8 @@ namespace SteamDataCollector.Models
         /// <param name="json">JSON</param>
         internal Genre(JToken json)
         {
+            if (null == json) return;
+
             Id = ushort.Parse(json["id"].ToString());
             Name = json["description"].ToString();
         }
@@ -192,6 +200,8 @@ namespace SteamDataCollector.Models
         /// <param name="json">JSON</param>
         internal Release(JToken json)
         {
+            if (null == json) return;
+
             Date = json["date"].ToString();
             IsUnRelease = (bool)json["coming_soon"];
         }
