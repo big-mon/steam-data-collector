@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace SteamDataCollector.Models
 {
@@ -51,6 +52,9 @@ namespace SteamDataCollector.Models
         /// <summary>True: 無料配布</summary>
         public bool IsFree { get; }
 
+        /// <summary>対応言語</summary>
+        public List<string> Languages { get; }
+
         /// <summary>デベロッパー情報</summary>
         public List<Developer> Developers { get; }
 
@@ -80,10 +84,20 @@ namespace SteamDataCollector.Models
             Type = json["type"].ToString();
             Name = json["name"].ToString();
             IsFree = (bool)json["is_free"];
-            Developers = json["developers"].Select(x => new Developer(x.ToString())).ToList();
-            Publishers = json["publishers"].Select(x => new Publisher(x.ToString())).ToList();
+            Languages = new Regex("<.*?</.*?>", RegexOptions.Singleline)
+                .Replace(json["supported_languages"].ToString().Replace("languages with full audio support", ""), "")
+                .Split(",")
+                .ToList();
+            Developers = json["developers"]
+                .Select(x => new Developer(x.ToString()))
+                .ToList();
+            Publishers = json["publishers"]
+                .Select(x => new Publisher(x.ToString()))
+                .ToList();
             PriceOverview = new Price(json["price_overview"]);
-            Genres = json["genres"].Select(x => new Genre(x)).ToList();
+            Genres = json["genres"]
+                .Select(x => new Genre(x))
+                .ToList();
             Recommendations = uint.Parse(json["recommendations"]["total"].ToString());
             Release = new Release(json["release_date"]);
         }
