@@ -31,7 +31,7 @@ namespace SteamDataCollector
         private static async Task Main(string[] args)
         {
             // 全Appのリストを取得
-            List<string> list = await GetAppList();
+            List<string> list = await GetTargetList();
 
             // DBを更新
             await UpdateData(list);
@@ -41,12 +41,13 @@ namespace SteamDataCollector
 
         /// <summary>AppIDのリストを取得</summary>
         /// <returns>AppIDリスト</returns>
-        private static async Task<List<string>> GetAppList()
+        private static async Task<List<string>> GetTargetList()
         {
             // Appリストを取得
-            Task<List<string>> originList = ConvertAppList();
+            Task<List<string>> originList = GetAllAppList();
 
             // 除外リストを取得
+            Task<List<string>> rejectList = GetRejectList();
 
             // IDリストを返却
             return await originList;
@@ -64,12 +65,17 @@ namespace SteamDataCollector
 
         /// <summary>API返却値をリストに変換</summary>
         /// <returns>AppIDリスト</returns>
-        private static async Task<List<string>> ConvertAppList()
+        private static async Task<List<string>> GetAllAppList()
         {
             var appList = JsonSerializer.Deserialize<Root>(await GetAllApps());
             var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderBy(x => int.Parse(x)).ToList() : new List<string>();
 
             return resList;
+        }
+
+        private static async Task<List<string>> GetRejectList()
+        {
+
         }
 
         #endregion アプリ取得
