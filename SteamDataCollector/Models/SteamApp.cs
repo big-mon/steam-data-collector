@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SteamDataCollector.Models
@@ -22,7 +19,7 @@ namespace SteamDataCollector.Models
         /// <summary>基本情報</summary>
         public App App { get; }
 
-        #endregion
+        #endregion Prop
 
         /// <summary>コンストラクタ</summary>
         /// <param name="id">AppID</param>
@@ -75,7 +72,7 @@ namespace SteamDataCollector.Models
         /// <summary>発売日情報</summary>
         public Release Release { get; }
 
-        #endregion
+        #endregion Prop
 
         /// <summary>コンストラクタ</summary>
         /// <param name="id">AppID</param>
@@ -152,7 +149,7 @@ namespace SteamDataCollector.Models
         /// <summary>割引率</summary>
         public sbyte DiscountPercent { get; }
 
-        #endregion
+        #endregion Prop
 
         /// <summary>コンストラクタ</summary>
         /// <param name="json">JSON</param>
