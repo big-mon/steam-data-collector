@@ -122,10 +122,16 @@ namespace SteamDataCollector
             var stopwatch = new Stopwatch();
             var client = new HttpClient();
 
+            var count = 0;
             foreach (var id in ids)
             {
+                count += 1;
+                var isSkip = false;
+
                 foreach (var cc in Enum.GetValues(typeof(CC)))
                 {
+                    if (isSkip) continue;
+
                     // 処理時間を計測開始
                     stopwatch.Restart();
 
@@ -135,6 +141,12 @@ namespace SteamDataCollector
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken(id.ToString());
                     var sa = new SteamApp(id, res);
+
+                    // 取得失敗の場合、地域別の取得をスキップ
+                    isSkip = !sa.IsSuccess;
+
+                    var title = null == sa.App ? "" : sa.App.Name;
+                    Console.WriteLine($"{count, 7}/{ids.Count}-{cc} : {sa.AppId, 7} {title}");
 
                     // DB反映
                     await UpdateDatabase(sa, (CC)cc);
