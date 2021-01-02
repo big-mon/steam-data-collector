@@ -34,6 +34,7 @@ namespace SteamDataCollector
 
                     // APIから結果取得
                     var result = await client.GetStringAsync(StoreAPI.AppDetailURL(id, cc));
+                    if (string.IsNullOrWhiteSpace(result)) continue;
 
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken(id.ToString());
