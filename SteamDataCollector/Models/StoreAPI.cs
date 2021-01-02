@@ -1,5 +1,6 @@
 ﻿namespace SteamDataCollector.Models
 {
+    /// <summary>ストアAPI関連</summary>
     internal class StoreAPI
     {
         /// <summary>ストア地域</summary>
