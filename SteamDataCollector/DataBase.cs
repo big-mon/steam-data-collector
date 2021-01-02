@@ -73,7 +73,7 @@ namespace SteamDataCollector
             }
             else
             {
-                cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `recommendations`) VALUES (@appid, @name, @recommendations) ON DUPLICATE KEY UPDATE `name` = @name, `recommendations` = @recommendations, `update_time` = CURRENT_TIMESTAMP";
+                cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `recommendations`) VALUES (@appid, @name, @recommendations) ON DUPLICATE KEY UPDATE `name` = @name, `type` = type, `recommendations` = @recommendations, `update_time` = CURRENT_TIMESTAMP";
                 if (app.IsSuccess)
                 {
                     cmd.Parameters.AddWithValue("name", app.App.Name);
