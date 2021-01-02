@@ -10,8 +10,11 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         internal static async Task UpdateDatabase(SteamApp app, StoreAPI.CC cc)
         {
-            // apps
-            await UpdateApp(app, cc);
+            if (StoreAPI.CC.us == cc)
+            {
+                // apps
+                await UpdateApp(app);
+            }
 
             if (app.IsSuccess)
             {
@@ -40,12 +43,10 @@ namespace SteamDataCollector
 
         /// <summary>Appテーブルを更新</summary>
         /// <param name="app">App情報</param>
-        /// <param name="area">ストア地域</param>
-        private static async Task UpdateApp(SteamApp app, StoreAPI.CC area)
+        private static async Task UpdateApp(SteamApp app)
         {
             using var conn = new MySqlConnection(StoreAPI.ConnString);
             await conn.OpenAsync();
-
 
             using var cmd = new MySqlCommand
             {
@@ -54,36 +55,19 @@ namespace SteamDataCollector
             };
             cmd.Parameters.AddWithValue("appid", app.AppId);
 
-            if (StoreAPI.CC.us == area)
+            if (app.IsSuccess)
             {
-                if (app.IsSuccess)
-                {
-                    cmd.Parameters.AddWithValue("name", app.App.Name);
-                    cmd.Parameters.AddWithValue("type", app.App.Type);
-                    cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
-                    cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("name", "");
-                    cmd.Parameters.AddWithValue("type", "");
-                    cmd.Parameters.AddWithValue("recommendations", 0);
-                    cmd.Parameters.AddWithValue("is_free", false);
-                }
+                cmd.Parameters.AddWithValue("name", app.App.Name);
+                cmd.Parameters.AddWithValue("type", app.App.Type);
+                cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
+                cmd.Parameters.AddWithValue("is_free", app.App.IsFree);
             }
             else
             {
-                cmd.CommandText = "INSERT INTO apps (`appid`, `name`, `recommendations`) VALUES (@appid, @name, @recommendations) ON DUPLICATE KEY UPDATE `name` = @name, `type` = type, `recommendations` = @recommendations, `update_time` = CURRENT_TIMESTAMP";
-                if (app.IsSuccess)
-                {
-                    cmd.Parameters.AddWithValue("name", app.App.Name);
-                    cmd.Parameters.AddWithValue("recommendations", app.App.Recommendations);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("name", "");
-                    cmd.Parameters.AddWithValue("recommendations", 0);
-                }
+                cmd.Parameters.AddWithValue("name", "");
+                cmd.Parameters.AddWithValue("type", "");
+                cmd.Parameters.AddWithValue("recommendations", 0);
+                cmd.Parameters.AddWithValue("is_free", false);
             }
 
             await cmd.ExecuteNonQueryAsync();
