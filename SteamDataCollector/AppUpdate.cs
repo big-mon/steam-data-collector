@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SteamDataCollector
 {
+    /// <summary>Appデータ更新</summary>
     internal class AppUpdate
     {
         /// <summary>APIをコールしDBへ反映</summary>
