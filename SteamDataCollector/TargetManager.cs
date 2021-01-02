@@ -12,7 +12,7 @@ namespace SteamDataCollector
     internal class TargetManager
     {
         /// <summary>DB接続文字列</summary>
-        private static string ConnString => $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
+        internal static string ConnString => $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
 
         /// <summary>AppIDのリストを取得</summary>
         /// <returns>AppIDリスト</returns>
