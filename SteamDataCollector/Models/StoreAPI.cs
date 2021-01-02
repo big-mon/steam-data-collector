@@ -12,6 +12,9 @@
             jp
         }
 
+        /// <summary>DB接続文字列</summary>
+        internal static string ConnString => $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
+
         /// <summary>アプリ詳細API用のURL</summary>
         /// <param name="appid">appid</param>
         /// <param name="area">ストア地域</param>

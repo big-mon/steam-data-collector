@@ -42,7 +42,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateApp(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -76,7 +76,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateDevelopers(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -111,7 +111,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdatePublishers(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -146,7 +146,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateGenres(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -182,7 +182,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateLanguages(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -217,7 +217,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdatePrices(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 
@@ -253,7 +253,7 @@ namespace SteamDataCollector
         /// <param name="app">App情報</param>
         private static async Task UpdateReleases(SteamApp app)
         {
-            using (var conn = new MySqlConnection(TargetManager.ConnString))
+            using (var conn = new MySqlConnection(StoreAPI.ConnString))
             {
                 await conn.OpenAsync();
 

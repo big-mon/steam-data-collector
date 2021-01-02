@@ -1,4 +1,5 @@
 ﻿using MySqlConnector;
+using SteamDataCollector.Models;
 using SteamDataCollector.Models.AppList;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,6 @@ namespace SteamDataCollector
     /// <summary>アプリ取得</summary>
     internal class TargetManager
     {
-        /// <summary>DB接続文字列</summary>
-        internal static string ConnString => $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
-
         /// <summary>AppIDのリストを取得</summary>
         /// <returns>AppIDリスト</returns>
         internal static async Task<List<string>> GetTargetList()
@@ -57,7 +55,7 @@ namespace SteamDataCollector
         {
             var resList = new List<string>();
 
-            using var conn = new MySqlConnection(ConnString);
+            using var conn = new MySqlConnection(StoreAPI.ConnString);
             await conn.OpenAsync();
 
             using var cmd = new MySqlCommand
