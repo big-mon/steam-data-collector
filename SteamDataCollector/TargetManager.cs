@@ -34,7 +34,7 @@ namespace SteamDataCollector
         private static async Task<string> GetAllApps()
         {
             var client = new HttpClient();
-            var result = await client.GetStringAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json");
+            string result = await client.GetStringAsync(StoreAPI.AllAppURL);
 
             return result;
         }

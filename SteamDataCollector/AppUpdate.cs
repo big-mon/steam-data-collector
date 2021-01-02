@@ -32,7 +32,7 @@ namespace SteamDataCollector
                     stopwatch.Restart();
 
                     // APIから結果取得
-                    var result = await client.GetStringAsync(StoreAPI.GetAppDetailURL(id, cc));
+                    var result = await client.GetStringAsync(StoreAPI.AppDetailURL(id, cc));
 
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken(id.ToString());
