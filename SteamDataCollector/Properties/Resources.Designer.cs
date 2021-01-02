@@ -97,7 +97,7 @@ namespace SteamDataCollector.Properties {
         }
         
         /// <summary>
-        ///   670 に類似しているローカライズされた文字列を検索します。
+        ///   1500 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SleepMilSec {
             get {
@@ -111,6 +111,15 @@ namespace SteamDataCollector.Properties {
         internal static string UserID {
             get {
                 return ResourceManager.GetString("UserID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   YOUR_URL に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string WebHook {
+            get {
+                return ResourceManager.GetString("WebHook", resourceCulture);
             }
         }
     }

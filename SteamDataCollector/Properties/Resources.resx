@@ -130,10 +130,13 @@
     <value>localhost</value>
   </data>
   <data name="SleepMilSec" xml:space="preserve">
-    <value>670</value>
+    <value>1500</value>
     <comment>200 requests per 5 minutes</comment>
   </data>
   <data name="UserID" xml:space="preserve">
     <value>YOUR_ID</value>
+  </data>
+  <data name="WebHook" xml:space="preserve">
+    <value>YOUR_URL</value>
   </data>
 </root>
