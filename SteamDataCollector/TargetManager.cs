@@ -61,7 +61,7 @@ namespace SteamDataCollector
             using var cmd = new MySqlCommand
             {
                 Connection = conn,
-                CommandText = "SELECT `appid` FROM apps WHERE `update_time` > DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)"
+                CommandText = "SELECT `appid` FROM apps WHERE `type` IN ('movie', 'demo', 'advertising') OR `update_time` > DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)"
             };
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
