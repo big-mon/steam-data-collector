@@ -11,16 +11,6 @@ namespace SteamDataCollector
 {
     internal class AppUpdate
     {
-        /// <summary>ストア地域</summary>
-        public enum CC
-        {
-            /// <summary>アメリカ</summary>
-            us,
-
-            /// <summary>日本</summary>
-            jp
-        }
-
         /// <summary>APIをコールしDBへ反映</summary>
         /// <param name="ids">AppIDリスト</param>
         internal static async Task UpdateData(IReadOnlyList<string> ids)
@@ -34,7 +24,7 @@ namespace SteamDataCollector
                 count += 1;
                 var isSkip = false;
 
-                foreach (var cc in Enum.GetValues(typeof(CC)))
+                foreach (StoreAPI.CC cc in Enum.GetValues(typeof(StoreAPI.CC)))
                 {
                     if (isSkip) continue;
 
@@ -42,7 +32,7 @@ namespace SteamDataCollector
                     stopwatch.Restart();
 
                     // APIから結果取得
-                    var result = await client.GetStringAsync(string.Format("https://store.steampowered.com/api/appdetails/?l=en&appids={0}&cc={1}", id, cc.ToString()));
+                    var result = await client.GetStringAsync(StoreAPI.GetAppDetailURL(id, cc));
 
                     // オブジェクト変換
                     var res = JObject.Parse(result).SelectToken(id.ToString());
@@ -55,7 +45,7 @@ namespace SteamDataCollector
                     Console.WriteLine($"{count,7}/{ids.Count}-{cc} : {sa.AppId,7} {title}");
 
                     // DB反映
-                    await DataBase.UpdateDatabase(sa, (CC)cc);
+                    await DataBase.UpdateDatabase(sa, cc);
 
                     // APIリミット回避のため待機
                     stopwatch.Stop();

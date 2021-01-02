@@ -8,7 +8,7 @@ namespace SteamDataCollector
     {
         /// <summary>DB更新</summary>
         /// <param name="app">App情報</param>
-        internal static async Task UpdateDatabase(SteamApp app, AppUpdate.CC cc)
+        internal static async Task UpdateDatabase(SteamApp app, StoreAPI.CC cc)
         {
             // apps
             await UpdateApp(app);
@@ -18,7 +18,7 @@ namespace SteamDataCollector
                 // prices
                 _ = UpdatePrices(app);
 
-                if (AppUpdate.CC.us == cc)
+                if (StoreAPI.CC.us == cc)
                 {
                     // developers
                     _ = UpdateDevelopers(app);
