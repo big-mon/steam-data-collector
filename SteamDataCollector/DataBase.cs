@@ -226,6 +226,9 @@ namespace SteamDataCollector
                 await cmd.ExecuteNonQueryAsync();
             }
 
+            // 終了判定
+            if (null == app.App || null == app.App.PriceOverview) return;
+
             // 挿入
             using (var cmd = new MySqlCommand())
             {
