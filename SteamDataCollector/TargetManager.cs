@@ -44,7 +44,7 @@ namespace SteamDataCollector
         private static async Task<List<string>> GetAllAppList()
         {
             var appList = JsonSerializer.Deserialize<Root>(await GetAllApps());
-            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderBy(x => int.Parse(x)).ToList() : new List<string>();
+            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderByDescending(x => int.Parse(x)).ToList() : new List<string>();
 
             return resList;
         }
