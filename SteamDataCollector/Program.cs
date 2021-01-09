@@ -8,7 +8,7 @@ namespace SteamDataCollector
         private static async Task Main(string[] args)
         {
             // 全Appのリストを取得
-            List<string> list = await TargetManager.GetTargetList();
+            list = await TargetManager.FetchAllAppsList();
 
             // DBを更新
             await AppUpdate.UpdateData(list);
