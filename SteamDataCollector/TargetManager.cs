@@ -46,7 +46,7 @@ namespace SteamDataCollector
         /// <returns>AppIDリスト</returns>
         private static async Task<List<string>> NormalizeApiToList()
         {
-            var appList = JsonSerializer.Deserialize<Root>(await RequestAPI(StoreAPI.AllAppURL));
+            var appList = JsonSerializer.Deserialize<Root>(await RequestAPI(StoreAPI.ALL_APP_API_URL));
             var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderByDescending(x => int.Parse(x)).ToList() : new List<string>();
 
             return resList;
@@ -88,5 +88,52 @@ namespace SteamDataCollector
         }
 
         #endregion AllApps
+
+        #region FeaturedApps
+
+        /// <summary>FeaturedAppsIDのリストを取得</summary>
+        /// <returns>AppIDリスト</returns>
+        internal static async Task<List<string>> FetchFeaturedList()
+        {
+            // API
+            var appList = JsonSerializer.Deserialize<Models.FeaturedList.Root>(await RequestAPI(StoreAPI.FEATURED_API_URL));
+
+            // リストへ変換
+            var winList = null != appList && null != appList.FeaturedWin ? appList.FeaturedWin.Select(x => x.Id.ToString()) : new List<string>();
+            var macList = null != appList && null != appList.FeaturedMac ? appList.FeaturedMac.Select(x => x.Id.ToString()) : new List<string>();
+            var linList = null != appList && null != appList.FeaturedLinux ? appList.FeaturedLinux.Select(x => x.Id.ToString()) : new List<string>();
+            var resList = winList.Concat(macList).Concat(linList).Distinct().ToList();
+
+            // IDリストを返却
+            return resList;
+        }
+
+        #endregion FeaturedApps
+
+        #region FeaturedCategory
+
+        /// <summary>FeaturedCategory内AppsIDのリストを取得</summary>
+        /// <returns>AppIDリスト</returns>
+        internal static async Task<List<string>> FetchFeaturedCategoryList()
+        {
+            // API
+            var appList = JsonSerializer.Deserialize<Models.FeaturedCategory.Root>(await RequestAPI(StoreAPI.FEATURED_CATEGORIES_API_URL));
+
+            // リストへ変換
+            var spList = null != appList && null != appList.Specials && null != appList.Specials.Items ?
+                appList.Specials.Items.Select(x => x.Id.ToString()) : new List<string>();
+            var csList = null != appList && null != appList.ComingSoon && null != appList.ComingSoon.Items ?
+                appList.ComingSoon.Items.Select(x => x.Id.ToString()) : new List<string>();
+            var tsList = null != appList && null != appList.TopSellers && null != appList.TopSellers.Items ?
+                appList.TopSellers.Items.Select(x => x.Id.ToString()) : new List<string>();
+            var nrList = null != appList && null != appList.NewReleases && null != appList.NewReleases.Items ?
+                appList.NewReleases.Items.Select(x => x.Id.ToString()) : new List<string>();
+            var resList = spList.Concat(csList).Concat(tsList).Concat(nrList).Distinct().ToList();
+
+            // IDリストを返却
+            return resList;
+        }
+
+        #endregion FeaturedCategory
     }
 }

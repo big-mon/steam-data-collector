@@ -17,7 +17,13 @@
         internal static string ConnString => $"Server={Properties.Resources.Server};Port={Properties.Resources.Port};Uid={Properties.Resources.UserID};Pwd={Properties.Resources.Password};Database={Properties.Resources.DataBase}";
 
         /// <summary>全Appリスト用のURL</summary>
-        internal const string AllAppURL = "https://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json";
+        internal const string ALL_APP_API_URL = "https://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json";
+
+        /// <summary>特集Appリスト用のURL</summary>
+        internal const string FEATURED_API_URL = "https://store.steampowered.com/api/featured/";
+
+        /// <summary>特集カテゴリーリスト用のURL</summary>
+        internal const string FEATURED_CATEGORIES_API_URL = "https://store.steampowered.com/api/featuredcategories/";
 
         /// <summary>アプリ詳細API用のURL</summary>
         /// <param name="appid">appid</param>
