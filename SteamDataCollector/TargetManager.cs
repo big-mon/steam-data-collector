@@ -30,7 +30,7 @@ namespace SteamDataCollector
         internal static async Task<List<string>> FetchAllAppsList()
         {
             // Appリストを取得
-            Task<List<string>> originList = NormalizeApiToList();
+            Task<List<string>> originList = RequestAppList();
 
             // 除外リストを取得
             Task<List<string>> rejectList = RetrivetRejectList();
@@ -42,12 +42,13 @@ namespace SteamDataCollector
             return list;
         }
 
-        /// <summary>API返却値をリストに変換</summary>
+        /// <summary>Steamから全Appリストを取得</summary>
         /// <returns>AppIDリスト</returns>
-        private static async Task<List<string>> NormalizeApiToList()
+        private static async Task<List<string>> RequestAppList()
         {
             var appList = JsonSerializer.Deserialize<Root>(await RequestAPI(StoreAPI.ALL_APP_API_URL));
-            var resList = null != appList ? appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderByDescending(x => int.Parse(x)).ToList() : new List<string>();
+            var resList = null != appList ?
+                appList.Applist.Apps.Select(x => x.Appid.ToString()).OrderByDescending(x => int.Parse(x)).ToList() : new List<string>();
 
             return resList;
         }
