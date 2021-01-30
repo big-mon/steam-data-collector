@@ -222,7 +222,7 @@ namespace SteamDataCollector
                 cmd.Connection = conn;
                 cmd.CommandText = "DELETE FROM prices WHERE `appid` = @appid and `currency` = @currency";
                 cmd.Parameters.AddWithValue("appid", app.AppId);
-                cmd.Parameters.AddWithValue("currency", null == app.App.PriceOverview.Currency);
+                cmd.Parameters.AddWithValue("currency", app.App.PriceOverview.Currency);
                 await cmd.ExecuteNonQueryAsync();
             }
 
