@@ -32,6 +32,7 @@ namespace SteamDataCollector
                     // 処理時間を計測開始
                     stopwatch.Restart();
 
+                    var title = "";
                     try
                     {
                         // APIから結果取得
@@ -45,7 +46,7 @@ namespace SteamDataCollector
                         // 取得失敗の場合、地域別の取得をスキップ
                         isSkip = !sa.IsSuccess;
 
-                        var title = null == sa.App ? "" : sa.App.Name;
+                        title = null == sa.App ? "" : sa.App.Name;
                         Console.WriteLine($"{count,7}/{ids.Count}-{cc} : {sa.AppId,7} {title}");
 
                         // DB反映
@@ -53,7 +54,7 @@ namespace SteamDataCollector
                     }
                     catch (Exception e)
                     {
-                        WebHookSender.SendWebHook($"{id} : {e.StackTrace}");
+                        WebHookSender.SendWebHook($"{id + "-" + title} : {e.Message}");
                     }
 
                     // APIリミット回避のため待機
